@@ -8,7 +8,7 @@ const { User, UserStreak } = require('../models');
 
 const seedAdmin = async () => {
   try {
-    const existing = await User.findOne({ where: { email: 'admin@goldtech.com' } });
+    const existing = await User.findOne({ where: { email: 'admin123@gmail.com' } });
     if (existing) {
       console.log('   [Admin] Akun admin sudah ada, skip seeding.');
       return;
@@ -17,7 +17,7 @@ const seedAdmin = async () => {
     const hashedPassword = await bcrypt.hash('admin123', 12);
     const admin = await User.create({
       name: 'Administrator GoldTech',
-      email: 'admin@goldtech.com',
+      email: 'admin123@gmail.com',
       password: hashedPassword,
       role: 'admin',
       join_date: new Date().toISOString().split('T')[0],
@@ -28,7 +28,7 @@ const seedAdmin = async () => {
     await UserStreak.create({ user_id: admin.id, current_streak: 0, longest_streak: 0 });
 
     console.log('   ✅ Akun admin berhasil dibuat!');
-    console.log('   📧 Email   : admin@goldtech.com');
+    console.log('   📧 Email   : admin123@gmail.com');
     console.log('   🔑 Password: admin123');
     console.log('   ⚠️  Segera ubah password setelah login pertama!');
   } catch (error) {

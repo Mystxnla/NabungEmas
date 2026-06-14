@@ -47,7 +47,7 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="auth-container admin-theme">
+    <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
           <div className="admin-icon">🛡️</div>
@@ -63,7 +63,7 @@ const AdminLogin = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@goldtech.com"
+              placeholder="admin123@gmail.com"
               required
             />
           </div>
@@ -82,7 +82,7 @@ const AdminLogin = () => {
           
           <button 
             type="submit" 
-            className="btn auth-btn admin-btn"
+            className="btn auth-btn"
             disabled={isLoading}
           >
             {isLoading ? 'Authenticating...' : 'Secure Login'}
