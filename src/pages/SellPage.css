@@ -1,0 +1,251 @@
+/* ========================================
+   SellPage.css
+   Styling untuk halaman Jual Emas
+   ======================================== */
+
+/* Header */
+.sell-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.sell-header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.sell-header-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);
+  flex-shrink: 0;
+}
+
+/* Tombol Jual */
+.btn-sell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  color: white;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.btn-sell:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.45);
+}
+
+.btn-sell:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Alert stok kosong */
+.sell-alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: rgba(251, 146, 60, 0.1);
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  color: var(--amber-400, #f59e0b);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.sell-alert svg {
+  flex-shrink: 0;
+  font-size: 18px;
+}
+
+/* Stat Cards Override */
+.sell-stat .stat-icon.orange {
+  background: rgba(249, 115, 22, 0.15);
+  color: #f97316;
+}
+
+.sell-stat .stat-icon.red {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.sell-stat-value {
+  font-size: 17px !important;
+}
+
+/* Info Bar */
+.sell-info-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 14px 20px;
+  border-radius: 12px;
+  background: var(--bg-secondary, #1a1a2e);
+  border: 1px solid var(--border-color, rgba(255,255,255,0.08));
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sell-info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 180px;
+}
+
+.sell-info-label {
+  font-size: 13px;
+  color: var(--gray-400);
+}
+
+.sell-info-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.sell-info-value.gold {
+  color: var(--gold-400, #f59e0b);
+}
+
+.sell-info-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--border-color, rgba(255,255,255,0.08));
+  flex-shrink: 0;
+}
+
+/* Profit Badge di tabel */
+.sell-badge-gram {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.profit-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.profit-positive {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+}
+
+.profit-negative {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}
+
+/* Modal: info stok */
+.sell-modal-stock-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  color: #22c55e;
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+
+.label-hint {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--gray-400);
+}
+
+/* Kalkulasi box di modal */
+.sell-calc-box {
+  background: var(--bg-secondary, #1a1a2e);
+  border: 1px solid var(--border-color, rgba(255,255,255,0.08));
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 4px;
+  margin-bottom: 20px;
+}
+
+.sell-calc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  padding: 6px 0;
+  color: var(--gray-400);
+}
+
+.sell-calc-value {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 16px;
+}
+
+.sell-calc-divider {
+  height: 1px;
+  background: var(--border-color, rgba(255,255,255,0.08));
+  margin: 8px 0;
+}
+
+.sell-calc-profit {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sell-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sell-info-bar {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sell-info-divider {
+    width: 100%;
+    height: 1px;
+  }
+
+  .sell-info-item {
+    min-width: 100%;
+  }
+}

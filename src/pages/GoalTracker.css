@@ -1,0 +1,111 @@
+/* GoalTracker Styles */
+
+.avg-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+  background: var(--gold-50);
+  border: 1px solid var(--gold-200);
+}
+
+.avg-info strong {
+  color: var(--gold-700);
+}
+
+.goals-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.goal-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.goal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.goal-card-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.goal-progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.goal-progress-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.goal-progress-text {
+  font-size: 13px;
+  color: var(--gray-500);
+}
+
+.goal-progress-percent {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gold-600);
+}
+
+.goal-gram-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--gray-400);
+}
+
+.goal-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.goal-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gd-label {
+  font-size: 12px;
+  color: var(--gray-400);
+}
+
+.gd-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.text-red {
+  color: var(--red-500) !important;
+}
+
+.goal-motivation {
+  padding: 12px 16px;
+  background: var(--gold-50);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--gold-800);
+  text-align: center;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .goals-grid {
+    grid-template-columns: 1fr;
+  }
+}

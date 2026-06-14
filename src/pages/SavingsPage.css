@@ -1,0 +1,44 @@
+/* Savings Page Styles */
+
+.savings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.savings-summary {
+  margin-bottom: 24px;
+}
+
+.action-btns {
+  display: flex;
+  gap: 4px;
+}
+
+.calculated-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: var(--gold-50);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+}
+
+.calculated-total span:first-child {
+  font-weight: 500;
+  color: var(--gray-600);
+}
+
+.total-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gold-700);
+}
+
+@media (max-width: 768px) {
+  .savings-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
