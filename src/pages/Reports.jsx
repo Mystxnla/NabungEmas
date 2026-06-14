@@ -41,8 +41,8 @@ const Reports = () => {
     let cumulativeInvested = 0;
 
     return sorted.map((t) => {
-      cumulativeGram += t.gram;
-      cumulativeInvested += t.total;
+      cumulativeGram += Number(t.gram);
+      cumulativeInvested += Number(t.total);
       return {
         date: t.date,
         gram: Number(cumulativeGram.toFixed(4)),

@@ -18,7 +18,7 @@ import './SavingsPage.css';
 const SavingsPage = () => {
   const {
     transactions, addTransaction, updateTransaction,
-    deleteTransaction, updateStreak, unlockBadge, totalGram,
+    deleteTransaction, updateStreak, unlockBadge, totalGram, CURRENT_GOLD_PRICE
   } = useApp();
   const toast = useToast();
 
@@ -56,10 +56,9 @@ const SavingsPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Buka modal untuk tambah transaksi baru
   const handleAdd = () => {
     setEditingId(null);
-    setForm({ date: getTodayDate(), gram: '', pricePerGram: '' });
+    setForm({ date: getTodayDate(), gram: '', pricePerGram: CURRENT_GOLD_PRICE.toString() });
     setErrors({});
     setModalOpen(true);
   };
@@ -77,7 +76,7 @@ const SavingsPage = () => {
   };
 
   // Submit form (tambah / update)
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
@@ -88,28 +87,32 @@ const SavingsPage = () => {
       total: Number(form.gram) * Number(form.pricePerGram),
     };
 
-    if (editingId) {
-      // Update transaksi
-      updateTransaction(editingId, data);
-      toast.success('Transaksi berhasil diperbarui!');
-    } else {
-      // Tambah transaksi baru
-      addTransaction({ ...data, id: generateId(), note: '' });
-      updateStreak(); // Update streak menabung
-      
-      // Cek badge
-      const newTotal = totalGram + data.gram;
-      if (transactions.length === 0) unlockBadge('first_buy');
-      if (transactions.length + 1 >= 10) unlockBadge('trans_10');
-      if (transactions.length + 1 >= 50) unlockBadge('trans_50');
-      if (newTotal >= 5) unlockBadge('gram_5');
-      if (newTotal >= 10) unlockBadge('gram_10');
-      if (newTotal >= 50) unlockBadge('gram_50');
-      
-      toast.success('Transaksi berhasil ditambahkan! 🎉');
-    }
+    try {
+      if (editingId) {
+        // Update transaksi
+        await updateTransaction(editingId, data);
+        toast.success('Transaksi berhasil diperbarui!');
+      } else {
+        // Tambah transaksi baru
+        await addTransaction({ ...data, id: generateId(), note: '' });
+        updateStreak(); // Update streak menabung
+        
+        // Cek badge
+        const newTotal = totalGram + data.gram;
+        if (transactions.length === 0) unlockBadge('first_buy');
+        if (transactions.length + 1 >= 10) unlockBadge('trans_10');
+        if (transactions.length + 1 >= 50) unlockBadge('trans_50');
+        if (newTotal >= 5) unlockBadge('gram_5');
+        if (newTotal >= 10) unlockBadge('gram_10');
+        if (newTotal >= 50) unlockBadge('gram_50');
+        
+        toast.success('Transaksi berhasil ditambahkan! 🎉');
+      }
 
-    setModalOpen(false);
+      setModalOpen(false);
+    } catch (error) {
+      // Error handled by AppContext (shows error toast)
+    }
   };
 
   // Konfirmasi hapus
@@ -267,8 +270,14 @@ const SavingsPage = () => {
                 placeholder="Contoh: 1250000"
                 value={form.pricePerGram}
                 onChange={(e) => handleChange('pricePerGram', e.target.value)}
+                readOnly
+                disabled
+                style={{ backgroundColor: 'var(--gray-50)', color: 'var(--gray-500)', cursor: 'not-allowed' }}
               />
               {errors.pricePerGram && <div className="form-error">{errors.pricePerGram}</div>}
+              <small style={{ display: 'block', marginTop: '6px', color: 'var(--gray-500)', fontSize: '12px' }}>
+                *Harga ditentukan secara otomatis berdasarkan harga emas hari ini.
+              </small>
             </div>
 
             {/* Total otomatis */}

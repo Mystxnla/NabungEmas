@@ -89,7 +89,7 @@ const SellPage = () => {
     setModalOpen(true);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
@@ -102,9 +102,13 @@ const SellPage = () => {
       note: form.note || '',
     };
 
-    addSellTransaction(data);
-    toast.success(`Berhasil jual ${formatGram(data.gram)} senilai ${formatCurrency(data.total)}! 💰`);
-    setModalOpen(false);
+    try {
+      await addSellTransaction(data);
+      toast.success(`Berhasil jual ${formatGram(data.gram)} senilai ${formatCurrency(data.total)}! 💰`);
+      setModalOpen(false);
+    } catch (error) {
+      // Error handled by AppContext
+    }
   };
 
   const handleDelete = (id) => {
@@ -360,8 +364,14 @@ const SellPage = () => {
                 placeholder="Contoh: 1250000"
                 value={form.pricePerGram}
                 onChange={(e) => handleChange('pricePerGram', e.target.value)}
+                readOnly
+                disabled
+                style={{ backgroundColor: 'var(--gray-50)', color: 'var(--gray-500)', cursor: 'not-allowed' }}
               />
               {errors.pricePerGram && <div className="form-error">{errors.pricePerGram}</div>}
+              <small style={{ display: 'block', marginTop: '6px', color: 'var(--gray-500)', fontSize: '12px' }}>
+                *Harga ditentukan secara otomatis berdasarkan harga emas hari ini.
+              </small>
             </div>
 
             <div className="form-group">

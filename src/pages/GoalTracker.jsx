@@ -75,7 +75,7 @@ const GoalTracker = () => {
     setModalOpen(true);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
@@ -86,17 +86,21 @@ const GoalTracker = () => {
       deadline: form.deadline,
     };
 
-    if (editingId) {
-      updateGoal(editingId, data);
-      toast.success('Target berhasil diperbarui!');
-    } else {
-      addGoal({ ...data, id: generateId(), createdAt: getTodayDate() });
-      if (goals.length === 0) unlockBadge('goal_1');
-      if (goals.length + 1 >= 5) unlockBadge('goal_5');
-      toast.success('Target baru berhasil ditambahkan! 🎯');
-    }
+    try {
+      if (editingId) {
+        await updateGoal(editingId, data);
+        toast.success('Target berhasil diperbarui!');
+      } else {
+        await addGoal({ ...data, id: generateId(), createdAt: getTodayDate() });
+        if (goals.length === 0) unlockBadge('goal_1');
+        if (goals.length + 1 >= 5) unlockBadge('goal_5');
+        toast.success('Target baru berhasil ditambahkan! 🎯');
+      }
 
-    setModalOpen(false);
+      setModalOpen(false);
+    } catch (error) {
+      // Error handled by AppContext
+    }
   };
 
   const handleDelete = (id) => {

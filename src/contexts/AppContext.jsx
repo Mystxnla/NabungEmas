@@ -8,7 +8,8 @@ import { profileService } from '../api/profileService';
 import { badgeService } from '../api/badgeService';
 import { streakService } from '../api/streakService';
 import { watchlistService } from '../api/watchlistService';
-import { CURRENT_GOLD_PRICE, USER_LEVELS } from '../utils/constants';
+import { goldPriceService } from '../api/goldPriceService';
+import { USER_LEVELS } from '../utils/constants';
 import { calculateProgress } from '../utils/helpers';
 
 /**
@@ -30,6 +31,22 @@ export const AppProvider = ({ children }) => {
   const [streak, setStreakState] = useState({ current_streak: 0, longest_streak: 0 });
   const [watchlist, setWatchlistState] = useState([]);
   const [isLoadingData, setIsLoadingData] = useState(false);
+  const [currentGoldPrice, setCurrentGoldPrice] = useState(1250000); // Default fallback
+
+  // Fetch current gold price globally
+  useEffect(() => {
+    const fetchGoldPrice = async () => {
+      try {
+        const res = await goldPriceService.getCurrent();
+        if (res.data && res.data.data && res.data.data.price) {
+          setCurrentGoldPrice(Number(res.data.data.price));
+        }
+      } catch (error) {
+        console.error('Failed to fetch current gold price:', error);
+      }
+    };
+    fetchGoldPrice();
+  }, []);
 
   // Fetch data saat user login
   useEffect(() => {
@@ -66,7 +83,7 @@ export const AppProvider = ({ children }) => {
       setSellTransactions(sellTxRes.data.data);
       setGoals(goalsRes.data.data);
       setProfileState(profileRes.data.data);
-      setBadgesState(badgesRes.data.data.map(b => b.badge_code));
+      setBadgesState(badgesRes.data.data.unlockedCodes || []);
       if (streakRes.data.data) {
         setStreakState({
           currentStreak: streakRes.data.data.current_streak,
@@ -109,14 +126,14 @@ export const AppProvider = ({ children }) => {
 
   // Estimasi nilai saat ini berdasarkan harga emas terkini (pakai netGram)
   const currentValue = useMemo(() => {
-    return netGram * CURRENT_GOLD_PRICE;
-  }, [netGram]);
+    return netGram * currentGoldPrice;
+  }, [netGram, currentGoldPrice]);
 
   // Harga beli rata-rata per gram
   const avgBuyPrice = useMemo(() => {
-    if (totalGram === 0) return CURRENT_GOLD_PRICE;
+    if (totalGram === 0) return currentGoldPrice;
     return totalInvested / totalGram;
-  }, [totalInvested, totalGram]);
+  }, [totalInvested, totalGram, currentGoldPrice]);
 
   // Profit/loss dari emas yang masih dipegang
   const profitLoss = useMemo(() => {
@@ -351,7 +368,7 @@ export const AppProvider = ({ children }) => {
     setProfile,
 
     // Konstanta
-    CURRENT_GOLD_PRICE,
+    CURRENT_GOLD_PRICE: currentGoldPrice,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

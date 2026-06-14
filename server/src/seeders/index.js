@@ -43,7 +43,7 @@ const runSeeders = async () => {
     await seedGoldPrices();
 
     console.log('\n🎉 ====== SEEDER SELESAI ======');
-    console.log('📧 Login admin: admin@goldtech.com');
+    console.log('📧 Login admin: admin123@gmail.com');
     console.log('🔑 Password   : admin123\n');
   } catch (error) {
     console.error('❌ Error menjalankan seeder:', error);

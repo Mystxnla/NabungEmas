@@ -349,13 +349,17 @@ const createGoldPrice = async (req, res) => {
     const { date, price, high, low, volume } = req.body;
     if (!date || !price) return res.status(400).json({ success: false, message: 'Tanggal dan harga diperlukan.' });
 
+    const safeHigh = high === '' ? null : high;
+    const safeLow = low === '' ? null : low;
+    const safeVolume = volume === '' ? null : volume;
+
     const [goldPrice, created] = await GoldPrice.findOrCreate({
       where: { date },
-      defaults: { price, high, low, volume },
+      defaults: { price, high: safeHigh, low: safeLow, volume: safeVolume },
     });
 
     if (!created) {
-      await goldPrice.update({ price, high, low, volume });
+      await goldPrice.update({ price, high: safeHigh, low: safeLow, volume: safeVolume });
       return res.status(200).json({ success: true, message: 'Harga emas untuk tanggal ini diperbarui!', data: goldPrice });
     }
 
@@ -370,7 +374,13 @@ const updateGoldPrice = async (req, res) => {
   try {
     const gp = await GoldPrice.findByPk(req.params.id);
     if (!gp) return res.status(404).json({ success: false, message: 'Data harga tidak ditemukan.' });
-    await gp.update(req.body);
+    
+    const updateData = { ...req.body };
+    if (updateData.high === '') updateData.high = null;
+    if (updateData.low === '') updateData.low = null;
+    if (updateData.volume === '') updateData.volume = null;
+    
+    await gp.update(updateData);
     return res.status(200).json({ success: true, message: 'Harga emas berhasil diperbarui!', data: gp });
   } catch (error) {
     return res.status(500).json({ success: false, message: 'Gagal memperbarui harga emas.' });
