@@ -6,18 +6,6 @@
 // Harga emas per gram saat ini (dummy, dalam Rupiah)
 export const CURRENT_GOLD_PRICE = 1250000;
 
-// Nama kunci Local Storage
-export const STORAGE_KEYS = {
-  TRANSACTIONS: 'GoldTech_transactions',
-  SELL_TRANSACTIONS: 'GoldTech_sell_transactions',
-  GOALS: 'GoldTech_goals',
-  USER_PROFILE: 'GoldTech_user_profile',
-  WATCHLIST: 'GoldTech_watchlist',
-  STREAK: 'GoldTech_streak',
-  BADGES: 'GoldTech_badges',
-  FIRST_VISIT: 'GoldTech_first_visit',
-};
-
 // Level pengguna berdasarkan total gram
 export const USER_LEVELS = [
   { level: 1, name: 'Pemula', minGram: 0, icon: '🌱' },

@@ -9,14 +9,26 @@ const cors = require('cors');
 const app = express();
 
 // ---- Middleware Global ----
-app.use((req, res, next) => {
-  console.log(`[API REQUEST] ${req.method} ${req.url}`);
-  next();
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    console.log(`[API REQUEST] ${req.method} ${req.url}`);
+    next();
+  });
+}
 app.use(cors({
   origin: function (origin, callback) {
-    // Izinkan semua origin saat development
-    callback(null, true);
+    // Di production, hanya izinkan origin tertentu
+    if (process.env.NODE_ENV === 'production' && process.env.CORS_ORIGIN) {
+      const allowedOrigins = process.env.CORS_ORIGIN.split(',');
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Blocked by CORS'));
+      }
+    } else {
+      // Development — izinkan semua origin
+      callback(null, true);
+    }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

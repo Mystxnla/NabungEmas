@@ -15,9 +15,12 @@ const startServer = async () => {
     await sequelize.authenticate();
     console.log('✅ Koneksi database MySQL berhasil.');
 
-    // Sinkronisasi model ke database (alter:true hanya untuk development)
-    // Gunakan { force: false } agar data tidak terhapus
-    await sequelize.sync({ alter: true });
+    // Sinkronisasi model ke database
+    // alter:true hanya untuk development, production pakai alter:false agar aman
+    const syncOptions = process.env.NODE_ENV === 'production'
+      ? { alter: false }
+      : { alter: true };
+    await sequelize.sync(syncOptions);
     console.log('✅ Database tersinkronisasi — semua tabel siap.');
 
     // Jalankan server

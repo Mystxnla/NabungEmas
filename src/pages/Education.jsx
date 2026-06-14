@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import articles from '../data/articles';
+import localArticles from '../data/articles';
+import { articleService } from '../api/articleService';
 import Modal from '../components/ui/Modal';
 import { formatCurrency } from '../utils/helpers';
 import { FiBookOpen, FiDollarSign, FiCoffee, FiTrendingUp, FiArrowRight } from 'react-icons/fi';
@@ -9,14 +10,34 @@ import './Education.css';
 /**
  * Education
  * Halaman edukasi finansial dan kalkulator alokasi anggaran bulanan.
- * Membaca konten edukasi berformat markdown dan kalkulator 50/30/20.
+ * Membaca konten edukasi dari API backend, dengan fallback ke data lokal.
  */
 const Education = () => {
   const [selectedCategory, setSelectedCategory] = useState('Semua');
   const [activeArticle, setActiveArticle] = useState(null);
+  const [articles, setArticles] = useState(localArticles);
 
   // State Kalkulator Anggaran
   const [monthlyIncome, setMonthlyIncome] = useState('5000000'); // Default Rp 5 Juta
+
+  // Fetch artikel dari API
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const res = await articleService.getAll();
+        if (res.data.data && res.data.data.length > 0) {
+          setArticles(res.data.data.map(art => ({
+            ...art,
+            readTime: art.read_time || art.readTime,
+          })));
+        }
+      } catch (error) {
+        // Fallback ke data lokal jika API gagal
+        console.error('Gagal memuat artikel dari API, menggunakan data lokal:', error);
+      }
+    };
+    fetchArticles();
+  }, []);
 
   // Daftar kategori artikel unik
   const categories = useMemo(() => {
@@ -27,13 +48,13 @@ const Education = () => {
       }
     });
     return cats;
-  }, []);
+  }, [articles]);
 
   // Filter artikel berdasarkan kategori
   const filteredArticles = useMemo(() => {
     if (selectedCategory === 'Semua') return articles;
     return articles.filter((art) => art.category === selectedCategory);
-  }, [selectedCategory]);
+  }, [selectedCategory, articles]);
 
   // Kalkulasi Anggaran 50/30/20
   const budgetAllocation = useMemo(() => {
@@ -166,7 +187,19 @@ const Education = () => {
                   key={art.id}
                   className="card article-card"
                   style={{ animationDelay: `${i * 0.1}s` }}
-                  onClick={() => setActiveArticle(art)}
+                  onClick={async () => {
+                    // Jika artikel dari API belum punya content, fetch detail
+                    if (!art.content && art.id) {
+                      try {
+                        const res = await articleService.getById(art.id);
+                        setActiveArticle({ ...art, ...res.data.data, readTime: res.data.data.read_time || art.readTime });
+                        return;
+                      } catch (error) {
+                        console.error('Gagal memuat detail artikel:', error);
+                      }
+                    }
+                    setActiveArticle(art);
+                  }}
                 >
                   <div className="article-card-header">
                     <span className="art-icon">{art.icon}</span>

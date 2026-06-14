@@ -1,0 +1,21 @@
+# ============================================
+# .htaccess untuk Rumahweb cPanel
+# Mengarahkan request /api ke Node.js backend
+# dan SPA routing untuk frontend React
+# ============================================
+
+RewriteEngine On
+
+# ---- Redirect HTTP ke HTTPS ----
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ---- Proxy /api requests ke Node.js app ----
+# Port disesuaikan dengan port yang diset di cPanel "Setup Node.js App"
+RewriteRule ^api/(.*)$ http://127.0.0.1:5050/api/$1 [P,L]
+
+# ---- SPA Routing (React Router) ----
+# Jika file/folder tidak ada, arahkan ke index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.html [L]

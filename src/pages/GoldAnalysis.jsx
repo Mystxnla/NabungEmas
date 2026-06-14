@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useApp } from '../contexts/AppContext';
-import { generateGoldPriceData } from '../utils/dummyData';
+import { goldPriceService } from '../api/goldPriceService';
 import { formatCurrency, formatGram, formatDateShort } from '../utils/helpers';
 import {
   ResponsiveContainer,
@@ -31,9 +31,31 @@ const GoldAnalysis = () => {
   const [monthlySaving, setMonthlySaving] = useState('500000');
   const [dcaMonths, setDcaMonths] = useState(12); // 3, 6, 12 bulan
 
-  // Generate data harga emas
-  const goldPriceData = useMemo(() => {
-    return generateGoldPriceData();
+  // Fetch data harga emas dari API
+  const [goldPriceData, setGoldPriceData] = useState([]);
+  const [isLoadingChart, setIsLoadingChart] = useState(true);
+
+  useEffect(() => {
+    const fetchGoldPrices = async () => {
+      setIsLoadingChart(true);
+      try {
+        const res = await goldPriceService.getHistory(365);
+        const apiData = res.data.data;
+        if (apiData && apiData.length > 0) {
+          setGoldPriceData(apiData.map(d => ({
+            date: d.date,
+            price: Number(d.price),
+            high: Number(d.high || d.price),
+            low: Number(d.low || d.price),
+          })));
+        }
+      } catch (error) {
+        console.error('Gagal memuat data harga emas dari API:', error);
+      } finally {
+        setIsLoadingChart(false);
+      }
+    };
+    fetchGoldPrices();
   }, []);
 
   // Filter data berdasarkan rentang waktu yang dipilih
